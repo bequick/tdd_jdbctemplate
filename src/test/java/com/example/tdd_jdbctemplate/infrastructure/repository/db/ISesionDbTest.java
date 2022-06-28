@@ -1,41 +1,43 @@
 package com.example.tdd_jdbctemplate.infrastructure.repository.db;
 
+import com.example.tdd_jdbctemplate.Application;
 import com.example.tdd_jdbctemplate.configuration.Data;
 import com.example.tdd_jdbctemplate.domain.Sesion;
-import org.junit.Before;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
-@SpringBootTest(classes = SesionDb.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-public class SesionDbTest {
+import javax.sql.DataSource;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Slf4j
+public class ISesionDbTest {
 
     @Autowired
-    SesionDb sesionDb;
+    DataSource dataSource;
 
-    @MockBean
-    private JdbcTemplate jdbcTemplate;
 
-    @Before
-    public void setUp() throws Exception {
-        sesionDb = new SesionDb();
+    @Autowired
+    private SesionDb sesionDb;
+
+
+    @Test
+    public void DataSourceTest() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        Assertions.assertNotNull(jdbcTemplate);
     }
 
     @Test
     public void crearSesion() {
         Sesion sesion = sesionDb.crearSesion(Data.SESION());
+
         Assertions.assertNotNull(sesion);
     }
-
-
-
 
 }

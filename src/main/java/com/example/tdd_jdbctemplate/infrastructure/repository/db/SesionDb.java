@@ -6,15 +6,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
+import java.io.PrintWriter;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 
-@Repository
+@Component
 public class SesionDb implements ISesionDb {
 
-    @Autowired
+
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public SesionDb(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public Sesion crearSesion(Sesion sesion) {
@@ -27,5 +39,6 @@ public class SesionDb implements ISesionDb {
         }, keyHolder);
         sesion.setId((Long)keyHolder.getKey());
         return resultado == 1 ? sesion : new Sesion();
+
     }
 }
